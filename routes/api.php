@@ -32,6 +32,7 @@ Route::group(['middleware'=>['auth:sanctum']],function () {
 //public routes
 
 Route::get('/post',[postController::class,"index"]);
+Route::post('/comment',[CommentsController::class,"show"]);
 
 
 

@@ -15,4 +15,15 @@ class Post extends Model
           'title', 
           'body',
     ];
+    
+//post belongs to user
+    public function user(){
+
+    return $this->belongsTo(User::class);
+}
+
+//comment belongs to the posts
+public function comments(){
+    return $this->hasMany(Comment::class);
+}
 }

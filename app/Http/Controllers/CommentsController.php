@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comments;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class CommentsController extends Controller
@@ -44,9 +45,16 @@ class CommentsController extends Controller
      * @param  \App\Models\Comments  $comments
      * @return \Illuminate\Http\Response
      */
-    public function show(Comments $comments)
+    public function show(Comments $comments,Request  $request)
     {
-        //
+    
+       $comments =Comments::create([
+            'user_id' => Auth::user()->id,
+            'post_id' =>$request->id,
+            'body' =>$request['body']
+
+        ]);
+      return response()->json(['success' =>"Commentented successfully","comment"=>$comments]);
     }
 
     /**
