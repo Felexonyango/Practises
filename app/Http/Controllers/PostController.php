@@ -16,7 +16,10 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+       $post=Post::all();
+       if($post){
+           return response()->json(['success' => true, 'posts' =>$post]);
+       }
     }
 
     /**
@@ -89,9 +92,12 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post)
+    public function update(Request $request, $id)
     {
-        //
+        $post= Post::find($id);
+        $post->update($request->all());
+        return response()->json(['success' =>"Post updated successfully",'post'=>$post]);
+
     }
 
     /**
@@ -100,8 +106,10 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Post $post)
+    public function destroy(Post $post,$id)
     {
-        //
+        $post= Post::destroy($id);
+        return response()->json(['success' =>"Post deleted successfully"]);
+
     }
 }

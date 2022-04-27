@@ -24,15 +24,14 @@ Route::post('/login', [UserController::class, "login"]);
 
 Route::group(['middleware'=>['auth:sanctum']],function () {
     Route::post('/post',[postController::class, "store"]);
-
-    Route::post('/logout',[AuthController::class, "logout"]);
+    Route::delete('/post/{id}',[postController::class, "destroy"]);
+    Route::put('/post/{id}',[postController::class,"update"]);
+    Route::post('/logout',[UserController::class, "logout"]);
 });
 
 //public routes
-    Route::get('/',  [ListingController::class, "index"]);
-    Route::get('/{id}', [ListingController::class, "show"]);
 
-   
+Route::get('/post',[postController::class,"index"]);
 
 
 
