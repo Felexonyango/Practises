@@ -22,8 +22,8 @@ class Post extends Model
     return $this->belongsTo(User::class);
 }
 
-//comment belongs to the posts
+//comments belongs to the posts
 public function comments(){
-    return $this->hasMany(Comment::class);
+    return $this->hasMany(Comments::class);
 }
 }

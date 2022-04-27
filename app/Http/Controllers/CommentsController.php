@@ -48,7 +48,7 @@ class CommentsController extends Controller
     public function show(Comments $comments,Request  $request)
     {
     
-       $comments =Comments::create([
+             $comments = Comments::create([
             'user_id' => Auth::user()->id,
             'post_id' =>$request->id,
             'body' =>$request['body']

@@ -16,7 +16,8 @@ class PostController extends Controller
      */
     public function index()
     {
-       $post=Post::all();
+        //get post by title in ascending order
+       $post=Post::orderBy('title','asc')->get();
        if($post){
            return response()->json(['success' => true, 'posts' =>$post]);
        }
