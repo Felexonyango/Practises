@@ -41,25 +41,41 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $rules = [
+        
+        $this->validate($request,[
             'title'=> 'required',
             'body' => 'required',
-         
-
-        ];
-        $input  = $request->only('title','body');
-        $validator = Validator::make($input, $rules);
-
-        if ($validator->fails()) {
-            return response()->json(['success' => false, 'error' => $validator->messages()]);
-        }
-        $post=Post::create([
-            'user_id' => Auth::user()->id,
-            'title' => $request['title'],
-            'body' =>$request['body']
-
-
+            'cover_image' =>'required|nullable|max:5000'
         ]);
+     
+//handle file upload
+if($request->hasFile('cover_image')){
+// get file with extension
+$fileNameWithEx =$request->file('cover_image')->getClientOriginalName() ;
+//get just full image 
+$fileName=pathinfo($fileNameWithEx, PATHINFO_FILENAME);
+//get just ext
+$extension =$request->file('cover_image')->getClientOriginalExtension();
+//file name to store 
+$fileNameTostore =$fileName.'_'.time().'_'.$extension;
+//upload image file
+$path = $request->file('cover_image')->storeAs('public/images/',$fileNameTostore);
+
+}
+else{
+
+    $fileNameTostore='noimage.jpg';
+
+}
+        $post = new Post();
+        $post->user_id=Auth::user()->id;
+        $post->title=$request-> input('title');
+        $post->body=$request-> input('body');
+         $post->cover_image=$fileNameTostore;
+        $post->save();
+
+
+
         return response()->json(['success' => true, 'post' => $post]);
     
     }
@@ -81,9 +97,13 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function edit(Post $post)
+    public function edit(Post $post,$id)
     {
-        //
+    $post=Post::find($id);
+    if(Auth::user()->id !==$post->user_id){
+        return response()->json(['success' =>false, 'error' =>"You are not allowed to edit this post"]);
+    }
+
     }
 
     /**

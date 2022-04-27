@@ -14,6 +14,7 @@ class Post extends Model
          'user_id',
           'title', 
           'body',
+          'cover_image'
     ];
     
 //post belongs to user
