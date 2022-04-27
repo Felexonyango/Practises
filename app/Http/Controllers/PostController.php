@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Auth;
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class PostController extends Controller
 {
@@ -35,7 +37,27 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $rules = [
+            'title'=> 'required',
+            'body' => 'required',
+         
+
+        ];
+        $input  = $request->only('title','body');
+        $validator = Validator::make($input, $rules);
+
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'error' => $validator->messages()]);
+        }
+        $post=Post::create([
+            'user_id' => Auth::user()->id,
+            'title' => $request['title'],
+            'body' =>$request['body']
+
+
+        ]);
+        return response()->json(['success' => true, 'post' => $post]);
+    
     }
 
     /**

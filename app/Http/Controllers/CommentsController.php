@@ -14,7 +14,7 @@ class CommentsController extends Controller
      */
     public function index()
     {
-        //
+        
     }
 
     /**

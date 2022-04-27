@@ -2,7 +2,9 @@
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\ListingController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\CommentsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,9 +23,8 @@ Route::post('/login', [UserController::class, "login"]);
 //protected routes
 
 Route::group(['middleware'=>['auth:sanctum']],function () {
-    Route::post('/create',[ListingController::class, "create"]);
-    Route::put('/{id}', [ListingController::class, "update"]);
-    Route::delete('/{id}', [ListingController::class, "destroy"]);
+    Route::post('/post',[postController::class, "store"]);
+
     Route::post('/logout',[AuthController::class, "logout"]);
 });
 

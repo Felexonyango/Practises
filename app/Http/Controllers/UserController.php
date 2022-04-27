@@ -18,8 +18,11 @@ class UserController extends Controller
             'name'=> 'required',
             'email' => 'unique:users|required|email',
             'password' => 'required|string',
+            'username'=> 'required',
+            'phone' => 'required'
+
         ];
-        $input  = $request->only('name','email','password');
+        $input  = $request->only('name','email','password','username','phone');
         $validator = Validator::make($input, $rules);
 
         if ($validator->fails()) {
@@ -29,6 +32,8 @@ class UserController extends Controller
         $user= User::create([
             'name'=>$request['name'],
             'email'=>$request['email'],
+            'username'=>$request['username'],
+            'phone'=>$request['phone'],
             'password' => bcrypt($request['password']),
         ]);
         
