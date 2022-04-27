@@ -25,9 +25,9 @@ Route::post('/comment',[CommentsController::class,"show"]);
 
 
 //protected routes
-
+Route::post('/post',[postController::class, "store"]);
 Route::group(['middleware'=>['auth:sanctum']],function () {
-    Route::post('/post',[postController::class, "store"]);
+ 
     Route::delete('/post/{id}',[postController::class, "destroy"]);
     Route::put('/post/{id}',[postController::class,"update"]);
     Route::post('/logout',[UserController::class, "logout"]);

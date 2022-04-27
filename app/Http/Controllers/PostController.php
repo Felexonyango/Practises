@@ -41,7 +41,6 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        
         $this->validate($request,[
             'title'=> 'required',
             'body' => 'required',
@@ -53,7 +52,10 @@ if($request->hasFile('cover_image')){
 // get file with extension
 $fileNameWithEx =$request->file('cover_image')->getClientOriginalName() ;
 //get just full image 
-$fileName=pathinfo($fileNameWithEx, PATHINFO_FILENAME);
+$fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
+$actualFileName = pathinfo($fileName, PATHINFO_FILENAME);
+
+$fileNameToStore = $actualFileName . time() . '.' . $fileExtension;
 //get just ext
 $extension =$request->file('cover_image')->getClientOriginalExtension();
 //file name to store 
@@ -73,8 +75,6 @@ else{
         $post->body=$request-> input('body');
          $post->cover_image=$fileNameTostore;
         $post->save();
-
-
 
         return response()->json(['success' => true, 'post' => $post]);
     
@@ -97,13 +97,12 @@ else{
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function edit(Post $post,$id)
+    public function edit(Post $post, $id)
     {
-    $post=Post::find($id);
-    if(Auth::user()->id !==$post->user_id){
-        return response()->json(['success' =>false, 'error' =>"You are not allowed to edit this post"]);
-    }
-
+        $post=Post::find($id);
+        if(Auth::user()->id !==$post->user_id){
+            return response()->json(['success' =>false, 'error' =>"You are not allowed to edit this resource"]);
+        }
     }
 
     /**
