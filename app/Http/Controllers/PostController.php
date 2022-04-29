@@ -18,17 +18,20 @@ class PostController extends Controller
     public function index()
     {
         //get post by title in ascending order
-       $post=Post::orderBy('title','asc')->get();
-       if($post){
-           return response()->json(['success' => true, 'posts' =>$post]);
-       }
+    //    $post=Post::orderBy('title','asc')->get();
+    //    if($post){
+    //        return response()->json(['success' => true, 'posts' =>$post]);
+    //    }
 
 
        //using query builder
-    //    $post=DB::table('posts')
-        // ->select('title')
-        // ->get()
-    // dd($post);
+       $post=DB::table('posts')
+        ->select('title')
+        // ->orderBy('title','asc')
+        ->get();
+        if($post){
+            return response()->json(['success' => true, 'posts' =>$post]);
+        }
 
     }
 
@@ -50,40 +53,24 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request,[
+
+        $request->validate([
             'title'=> 'required',
             'body' => 'required',
             'cover_image' =>'required|nullable|max:5000'
         ]);
-     
-//handle file upload
-if($request->hasFile('cover_image')){
-// get file with extension
-$fileNameWithEx =$request->file('cover_image')->getClientOriginalName() ;
-//get just full image 
-$fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
-$actualFileName = pathinfo($fileName, PATHINFO_FILENAME);
 
-$fileNameToStore = $actualFileName . time() . '.' . $fileExtension;
-//get just ext
-$extension =$request->file('cover_image')->getClientOriginalExtension();
-//file name to store 
-$fileNameTostore =$fileName.'_'.time().'_'.$extension;
-//upload image file
-$path = $request->file('cover_image')->storeAs('public/images/',$fileNameTostore);
+        $post = $request->all();
 
-}
-else{
+        if ($image = $request->file('cover_image')) {
+            $destinationPath = 'image/';
+            $profileImage = date('YmdHis') . "." . $image->getClientOriginalExtension();
+            $image->move($destinationPath, $profileImage);
+            $post['cover_image'] = "$profileImage";
+        }
 
-    $fileNameTostore='noimage.jpg';
+        Post::create($post);
 
-}
-        $post = new Post();
-        $post->user_id=Auth::user()->id;
-        $post->title=$request-> input('title');
-        $post->body=$request-> input('body');
-         $post->cover_image=$fileNameTostore;
-        $post->save();
 
         return response()->json(['success' => true, 'post' => $post]);
     
@@ -121,10 +108,28 @@ else{
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request,post $post, $d)
     {
-        $post= Post::find($id);
-        $post->update($request->all());
+
+
+        $request->validate([
+            'title'=> 'required',
+            'body' => 'required',
+        ]);
+
+        $input = $request->all();
+
+        if ($image = $request->file('cover_image')) {
+            $destinationPath = 'image/';
+            $profileImage = date('YmdHis') . "." . $image->getClientOriginalExtension();
+            $image->move($destinationPath, $profileImage);
+            $input['cover_image'] = "$profileImage";
+        }else{
+            unset($input['cover_image']);
+        }
+        
+        $post->update($input);
+  
         return response()->json(['success' =>"Post updated successfully",'post'=>$post]);
 
     }
