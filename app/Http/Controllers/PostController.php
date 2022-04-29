@@ -6,6 +6,7 @@ use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
@@ -21,6 +22,14 @@ class PostController extends Controller
        if($post){
            return response()->json(['success' => true, 'posts' =>$post]);
        }
+
+
+       //using query builder
+    //    $post=DB::table('posts')
+        // ->select('title')
+        // ->get()
+    // dd($post);
+
     }
 
     /**
